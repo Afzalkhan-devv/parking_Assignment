@@ -24,7 +24,9 @@ public class ParkingSlot {
 	private SlotType slotType;
 	
 	@Column(nullable = false)
-	private boolean isAvailable = true;
+	private boolean available = true;
 	
-	
+	public enum SlotType {
+        CAR, BIKE, TRUCK
+    }
 }

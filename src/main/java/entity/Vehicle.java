@@ -13,7 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-@Entity @Data
+@Data
+@Entity
 public class Vehicle {
 
 	@Id @GeneratedValue(strategy = GenerationType.UUID)
@@ -31,4 +32,9 @@ public class Vehicle {
 	
 	@CreationTimestamp
 	private LocalDateTime registeredAt;
+	
+	public enum VehicleType {
+        CAR, BIKE, TRUCK
+    }
+	
 }
