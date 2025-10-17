@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dto.ParkingSlotRequest;
 import entity.ParkingSlot;
-import entity.SlotType;
+import entity.ParkingSlot.SlotType;
 
 import java.util.List;
 
@@ -38,9 +38,10 @@ public class ParkingSlotService {
         log.debug("Fetching slots - available: {}, type: {}", available, type);
         
         if (available != null && type != null) {
-            return slotRepository.findAll().stream()
-            		.filter(s -> s.isAvailable() == available && s.getSlotType().equals(type))
-                    .toList();
+        	return slotRepository.findAll().stream()
+        	        .filter(s -> s.isAvailable() == available && s.getSlotType().equals(type))
+        	        .toList();
+
         } else if (available != null) {
             return slotRepository.findByIsAvailable(available);
         } else if (type != null) {
