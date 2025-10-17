@@ -1,4 +1,4 @@
-package dto;
+package com.parking.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -7,6 +7,6 @@ import lombok.Data;
 public class ParkRequest {
 	
 	@NotBlank(message = "Vehicle Id is required")
-	private String vehicleId;
+	   private String vehicleId;
 	
 }

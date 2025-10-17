@@ -43,13 +43,6 @@ mvn spring-boot:run
 ```
 
 The application will start on `http://localhost:8080`
-
-4. **Access H2 Console** (Optional)
-```
-URL: http://localhost:8080/h2-console
-JDBC URL: jdbc:h2:mem:parkingdb
-Username: sa
-Password: (leave blank)
 ```
 
 ## API Endpoints
@@ -62,8 +55,8 @@ POST /api/vehicles
 Content-Type: application/json
 
 {
-  "licensePlate": "MH01AB1234",
-  "ownerName": "John Doe",
+  "licensePlate": "HR51CB5999",
+  "ownerName": "Afzal khan",
   "vehicleType": "CAR"
 }
 ```
@@ -72,10 +65,10 @@ Content-Type: application/json
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
-  "licensePlate": "MH01AB1234",
-  "ownerName": "John Doe",
+  "licensePlate": "HR51CB5999",
+  "ownerName": "Afzal khan",
   "vehicleType": "CAR",
-  "registeredAt": "2024-10-16T10:30:00"
+  "registeredAt": "2025-10-16T10:30:00"
 }
 ```
 
@@ -142,8 +135,8 @@ Content-Type: application/json
   "id": "770e8400-e29b-41d4-a716-446655440000",
   "vehicle": {
     "id": "550e8400-e29b-41d4-a716-446655440000",
-    "licensePlate": "MH01AB1234",
-    "ownerName": "John Doe",
+    "licensePlate": "HR51CB5999",
+    "ownerName": "Afzal khan",
     "vehicleType": "CAR"
   },
   "slot": {
@@ -152,7 +145,7 @@ Content-Type: application/json
     "slotType": "CAR",
     "isAvailable": false
   },
-  "entryTime": "2024-10-16T11:00:00",
+  "entryTime": "2025-10-16T11:00:00",
   "exitTime": null
 }
 ```
@@ -173,8 +166,8 @@ POST /api/unpark/{ticketId}
     "slotType": "CAR",
     "isAvailable": true
   },
-  "entryTime": "2024-10-16T11:00:00",
-  "exitTime": "2024-10-16T13:30:00"
+  "entryTime": "2025-10-16T11:00:00",
+  "exitTime": "2025-10-16T13:30:00"
 }
 ```
 
@@ -190,7 +183,7 @@ GET /api/tickets/{ticketId}
 ### Validation Error (400 Bad Request)
 ```json
 {
-  "timestamp": "2024-10-16T10:30:00",
+  "timestamp": "2025-10-16T10:30:00",
   "status": 400,
   "errors": {
     "licensePlate": "License plate is required",
@@ -202,7 +195,7 @@ GET /api/tickets/{ticketId}
 ### Business Logic Error (400 Bad Request)
 ```json
 {
-  "timestamp": "2024-10-16T10:30:00",
+  "timestamp": "2025-10-16T10:30:00",
   "status": 400,
   "message": "Vehicle with this license plate already exists"
 }
@@ -218,135 +211,8 @@ GET /api/tickets/{ticketId}
 ```
 
 ---
-
-## Testing Flow
-
-### 1. Setup Initial Data
-
-**Create Parking Slots:**
-```bash
-# CAR slots
-curl -X POST http://localhost:8080/api/slots \
-  -H "Content-Type: application/json" \
-  -d '{"slotNumber":"A-101","slotType":"CAR"}'
-
-curl -X POST http://localhost:8080/api/slots \
-  -H "Content-Type: application/json" \
-  -d '{"slotNumber":"A-102","slotType":"CAR"}'
-
-# BIKE slots
-curl -X POST http://localhost:8080/api/slots \
-  -H "Content-Type: application/json" \
-  -d '{"slotNumber":"B-101","slotType":"BIKE"}'
-
-# TRUCK slot
-curl -X POST http://localhost:8080/api/slots \
-  -H "Content-Type: application/json" \
-  -d '{"slotNumber":"C-101","slotType":"TRUCK"}'
-```
-
-**Register Vehicles:**
-```bash
-# Car
-curl -X POST http://localhost:8080/api/vehicles \
-  -H "Content-Type: application/json" \
-  -d '{"licensePlate":"MH01AB1234","ownerName":"John Doe","vehicleType":"CAR"}'
-
-# Bike
-curl -X POST http://localhost:8080/api/vehicles \
-  -H "Content-Type: application/json" \
-  -d '{"licensePlate":"MH02CD5678","ownerName":"Jane Smith","vehicleType":"BIKE"}'
-```
-
-### 2. Test Parking Operations
-
-**Park a vehicle** (save the vehicle ID from registration):
-```bash
-curl -X POST http://localhost:8080/api/park \
-  -H "Content-Type: application/json" \
-  -d '{"vehicleId":"<VEHICLE_ID>"}'
-```
-
-**Check available slots:**
-```bash
-curl http://localhost:8080/api/slots?available=true
-```
-
-**Unpark a vehicle** (use ticket ID from park response):
-```bash
-curl -X POST http://localhost:8080/api/unpark/<TICKET_ID>
-```
-
-### 3. Test Error Scenarios
-
-**Duplicate license plate:**
-```bash
-curl -X POST http://localhost:8080/api/vehicles \
-  -H "Content-Type: application/json" \
-  -d '{"licensePlate":"MH01AB1234","ownerName":"Another Person","vehicleType":"CAR"}'
-```
-
-**Park already parked vehicle:**
-```bash
-# Park same vehicle twice
-curl -X POST http://localhost:8080/api/park \
-  -H "Content-Type: application/json" \
-  -d '{"vehicleId":"<SAME_VEHICLE_ID>"}'
-```
-
-**No available slots:**
-```bash
 # Park vehicles until all CAR slots are full
 # Then try to park another CAR
-```
-
----
-
-## Running Tests
-```bash
-# Run all tests
-mvn test
-
-# Run with coverage
-mvn clean test jacoco:report
-
-# Run specific test class
-mvn test -Dtest=VehicleServiceTest
-```
-
----
-
-## Project Structure
-```
-src/main/java/com/parking/
-├── ParkingSystemApplication.java
-├── controller/
-│   ├── VehicleController.java
-│   ├── ParkingSlotController.java
-│   └── ParkingController.java
-├── service/
-│   ├── VehicleService.java
-│   ├── ParkingSlotService.java
-│   └── ParkingService.java
-├── repository/
-│   ├── VehicleRepository.java
-│   ├── ParkingSlotRepository.java
-│   └── ParkingTicketRepository.java
-├── entity/
-│   ├── Vehicle.java
-│   ├── ParkingSlot.java
-│   └── ParkingTicket.java
-├── dto/
-│   ├── VehicleRequest.java
-│   ├── ParkingSlotRequest.java
-│   └── ParkRequest.java
-└── exception/
-    ├── GlobalExceptionHandler.java
-    ├── ResourceNotFoundException.java
-    └── BusinessException.java
-```
-
----
 
 ## Business Rules
 
@@ -368,21 +234,3 @@ src/main/java/com/parking/
    - All required fields are validated
    - Invalid IDs return 404
    - Business rule violations return 400
-
----
-
-## Future Enhancements
-
-- [ ] Parking fee calculation based on duration
-- [ ] Reservation system
-- [ ] Multi-level parking support
-- [ ] Payment integration
-- [ ] Real-time slot availability dashboard
-- [ ] Email/SMS notifications
-- [ ] Vehicle exit time estimation
-
----
-
-## License
-
-MIT License

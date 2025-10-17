@@ -1,14 +1,16 @@
 package service;
 
-import dto.VehicleRequest;
-import entity.Vehicle;
-import exception.BusinessException;
-import repository.VehicleRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.parking.dto.VehicleRequest;
+import com.parking.entity.Vehicle;
+import com.parking.exception.BusinessException;
+import com.parking.repository.VehicleRepository;
+import com.parking.service.VehicleService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

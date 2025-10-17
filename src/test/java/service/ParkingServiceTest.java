@@ -1,18 +1,20 @@
 package service;
 
-import dto.ParkRequest;
-import entity.ParkingSlot;
-import entity.ParkingTicket;
-import entity.Vehicle;
-import exception.BusinessException;
-import repository.ParkingSlotRepository;
-import repository.ParkingTicketRepository;
-import repository.VehicleRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.parking.dto.ParkRequest;
+import com.parking.entity.ParkingSlot;
+import com.parking.entity.ParkingTicket;
+import com.parking.entity.Vehicle;
+import com.parking.exception.BusinessException;
+import com.parking.repository.ParkingSlotRepository;
+import com.parking.repository.ParkingTicketRepository;
+import com.parking.repository.VehicleRepository;
+import com.parking.service.ParkingService;
 
 import java.util.Optional;
 
@@ -49,9 +51,9 @@ class ParkingServiceTest {
         slot.setSlotType(ParkingSlot.SlotType.CAR);
         slot.setAvailable(true);
         
-        when(vehicleRepository.findById("vehicle-123")).thenReturn(Optional.of(vehicle));
+       when(vehicleRepository.findById("vehicle-123")).thenReturn(Optional.of(vehicle));
         when(ticketRepository.findByvehicleIdAndExitTimeIsNull(any())).thenReturn(Optional.empty());
-        when(slotRepository.findFirstBySlotTypeAndIsAvailableTrue(any())).thenReturn(Optional.of(slot));
+        when(slotRepository.findFirstBySlotTypeAndAvailableTrue(any())).thenReturn(Optional.of(slot));
         when(ticketRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
         
         ParkingTicket result = parkingService.parkVehicle(request);
@@ -71,7 +73,7 @@ class ParkingServiceTest {
         
         when(vehicleRepository.findById(any())).thenReturn(Optional.of(vehicle));
         when(ticketRepository.findByvehicleIdAndExitTimeIsNull(any())).thenReturn(Optional.empty());
-        when(slotRepository.findFirstBySlotTypeAndIsAvailableTrue(any())).thenReturn(Optional.empty());
+        when(slotRepository.findFirstBySlotTypeAndAvailableTrue(any())).thenReturn(Optional.empty());
         
         assertThrows(BusinessException.class, () -> parkingService.parkVehicle(request));
     }
