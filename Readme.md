@@ -51,7 +51,7 @@ The application will start on `http://localhost:8080`
 
 #### Register a Vehicle
 ```http
-POST /api/vehicles
+POST /api/vehicles              ==================Example: http://localhost:8080/api/vehicles
 Content-Type: application/json
 
 {
